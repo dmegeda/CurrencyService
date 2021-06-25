@@ -4,17 +4,20 @@ using AuthService.Infrastructure;
 using AuthService.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AuthService.Services
 {
-    public class AuthService : IAuthService
+    public class UserService : IUserService
     {
         IUserContext _context;
 
-        public AuthService(IUserContext context)
+        public UserService(IUserContext context)
         {
             _context = context;
         }
@@ -22,14 +25,24 @@ namespace AuthService.Services
         public void Register(UserModel userModel)
         {
             _context.LoadData();
-            string email = userModel.Email;
-            string passwordHash = Hash(userModel.Password);
-            User user = new User(email, passwordHash);
 
+            if (!IsEmailCorrect(userModel.Email))
+            {
+                throw new ArgumentException("Email is invalid!");
+            }
+
+            if (!IsPasswordCorrect(userModel.Password))
+            {
+                throw new ArgumentException("Password is invalid");
+            }
+            
             if (IsUserExists(userModel))
             {
                 throw new ArgumentException("User already exists!");
             }
+
+            string passwordHash = Hash(userModel.Password);
+            User user = new User(userModel.Email, passwordHash);
 
             _context.Users.Add(user);
             _context.WriteData();
@@ -59,14 +72,20 @@ namespace AuthService.Services
 
         public bool IsPasswordCorrect(string password)
         {
-            //to do: validating
-            return false;
+            if (password.Length < 3 || password.Length > 100) return false;
+
+            return true;
         }
 
         public bool IsEmailCorrect(string email)
         {
-            //to do: validating
-            return false;
+            if (email == null) return false;
+
+            string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.
+                    [a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
+                    [a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+
+            return Regex.IsMatch(email, pattern);
         }
 
         private string Hash(string password)

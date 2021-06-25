@@ -9,11 +9,11 @@ namespace AuthService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IAuthService _authService;
+        private IUserService _authService;
         private ITokenBuilder _tokenBuilder;
 
 
-        public UserController(IAuthService service, ITokenBuilder builder)
+        public UserController(IUserService service, ITokenBuilder builder)
         {
             _authService = service;
             _tokenBuilder = builder;

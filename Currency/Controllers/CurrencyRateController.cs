@@ -1,11 +1,8 @@
 ﻿using Currency.Entities;
-using Microsoft.AspNetCore.Http;
+using Currency.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Currency.Controllers
@@ -16,27 +13,33 @@ namespace Currency.Controllers
     {
         private string _baseUrl = "https://api.cryptonator.com/api/ticker";
 
+        //[Authorize]
         [HttpGet("/{baseCurrency}-{targetCurrency}")]
         public async Task<IActionResult> GetRate(string baseCurrency, string targetCurrency)
         {
             string url = _baseUrl + $"/{baseCurrency}-{targetCurrency}";
-            using HttpClient client = new HttpClient();
-            using HttpResponseMessage message = await client.GetAsync(url);
-            using HttpContent content = message.Content;
-            string data = await content.ReadAsStringAsync();
+
+            HttpService httpService = new HttpService();
+            string data = await httpService.GetAsync(url);
 
             if (data != null)
             {
-                var jsonObj = JObject.Parse(data);
-                string baseCur = $"{jsonObj["ticker"]["base"]}";
-                string targetCur = $"{jsonObj["ticker"]["target"]}";
-                string price = $"{jsonObj["ticker"]["price"]}".Replace(".", ",");
-                decimal parsedPrice = decimal.Parse(price);
-                CurrencyRateInfo info = new CurrencyRateInfo(baseCur, targetCur, parsedPrice);
-                return Ok(info);
+                return Ok(GetInfo(data));
             }
 
             return BadRequest("Something went wrong...");
+        }
+
+        private CurrencyRateInfo GetInfo(string data)
+        {
+            var jsonObj = JObject.Parse(data);
+            var ticker = jsonObj["ticker"];
+            string baseCur = $"{ticker["base"]}";
+            string targetCur = $"{ticker["target"]}";
+            string price = $"{ticker["price"]}".Replace(".", ",");
+            decimal parsedPrice = decimal.Parse(price);
+            
+            return new CurrencyRateInfo(baseCur, targetCur, parsedPrice);
         }
     }
 }

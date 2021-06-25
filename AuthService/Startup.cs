@@ -60,7 +60,7 @@ namespace AuthService
                 });
 
             services.AddScoped<ITokenBuilder, TokenBuilder>();
-            services.AddScoped<IAuthService, Services.AuthService>();
+            services.AddScoped<IUserService, Services.UserService>();
             services.AddScoped<IUserContext, UserContext>();
         }
 

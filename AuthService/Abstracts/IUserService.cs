@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuthService.Abstracts
 {
-    public interface IAuthService
+    public interface IUserService
     {
         public void Register(UserModel user);
         public void Login(UserModel user);
