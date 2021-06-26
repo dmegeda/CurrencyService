@@ -23,6 +23,30 @@
       ],
       "UpstreamPathTemplate": "/create",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/CurrencyRate/{baseCurrency}-{targetCurrency}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44352
+        }
+      ],
+      "UpstreamPathTemplate": "/{baseCurrency}/{targetCurrency}/",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/CurrencyRate/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44352
+        }
+      ],
+      "UpstreamPathTemplate": "/rate/",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

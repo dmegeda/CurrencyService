@@ -81,9 +81,9 @@ namespace AuthService.Services
         {
             if (email == null) return false;
 
-            string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.
-                    [a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
-                    [a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+            string pattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                            + "@"
+                            + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
 
             return Regex.IsMatch(email, pattern);
         }

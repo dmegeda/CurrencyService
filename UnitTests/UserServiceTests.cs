@@ -19,6 +19,16 @@ namespace UnitTests
         }
 
         [Test]
+        [TestCase("currency123@gmail.com")]
+        [TestCase("currency.Rate123@gmail.com")]
+        public void EmailValidationTest_EmailValid_ReturnTrue(string email)
+        {
+            UserService auth = new UserService(new UserContext());
+
+            Assert.IsTrue(auth.IsEmailCorrect(email));
+        }
+
+        [Test]
         [TestCase("1")]
         [TestCase("ab")]
         [TestCase("password_incorrect_password_incorrect_password_incorrect_password_incorrect_" +

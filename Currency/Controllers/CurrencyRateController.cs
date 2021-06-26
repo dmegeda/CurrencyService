@@ -13,8 +13,14 @@ namespace Currency.Controllers
     {
         private string _baseUrl = "https://api.cryptonator.com/api/ticker";
 
+        [HttpGet]
+        public IActionResult GetSomething()
+        {
+            return Ok("Working fine!");
+        }
+
         //[Authorize]
-        [HttpGet("/{baseCurrency}-{targetCurrency}")]
+        [HttpGet("{baseCurrency}-{targetCurrency}")]
         public async Task<IActionResult> GetRate(string baseCurrency, string targetCurrency)
         {
             string url = _baseUrl + $"/{baseCurrency}-{targetCurrency}";
